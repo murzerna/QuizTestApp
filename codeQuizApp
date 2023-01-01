@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct QuizQuestion {
+    string question;
+    vector<string> answerOptions;
+    int correctAnswerIndex;
+};
+
+// Displays the quiz to the user
+void displayQuiz(const vector<QuizQuestion>& quiz) {
+    for (int i = 0; i < quiz.size(); i++) {
+        cout << "Question " << i + 1 << ": " << quiz[i].question << endl;
+        for (int j = 0; j < quiz[i].answerOptions.size(); j++) {
+            cout << j + 1 << ". " << quiz[i].answerOptions[j] << endl;
+        }
+        cout << endl;
+    }
+}
+
+// Converts the quiz to a string that can be shared with others
+string quizToString(const vector<QuizQuestion>& quiz) {
+    string result;
+    for (int i = 0; i < quiz.size(); i++) {
+        result += "Question " + to_string(i + 1) + ": " + quiz[i].question + "\n";
+        for (int j = 0; j < quiz[i].answerOptions.size(); j++) {
+            result += to_string(j + 1) + ". " + quiz[i].answerOptions[j] + "\n";
+        }
+        result += "Correct answer: " + to_string(quiz[i].correctAnswerIndex + 1) + "\n\n";
+    }
+    return result;
+}
+
+int main() {
+    vector<QuizQuestion> quiz;
+
+    // Create the quiz questions
+    while (true) {
+        QuizQuestion question;
+
+        cout << "Enter a question (or enter 'q' to stop creating questions): ";
+        getline(cin, question.question);
+        if (question.question == "q") {
+            break;
+        }
+
+        cout << "Enter the answer options (separated by newlines): ";
+        string answerOption;
+        while (getline(cin, answerOption) && answerOption != "") {
+            question.answerOptions.push_back(answerOption);
+        }
+
+        cout << "Enter the index of the correct answer (1-" << question.answerOptions.size() << "): ";
+        int correctAnswerIndex;
+        cin >> correctAnswerIndex;
+        question.correctAnswerIndex = correctAnswerIndex - 1;
+
+        quiz.push_back(question);
+
+        // Clear the input buffer
+        cin.ignore();
+    }
+
+    // Display the quiz to the user
+    cout << endl;
+    cout << "Here is your quiz:" << endl;
+    displayQuiz(quiz);
+
+    // Convert the quiz to a string that can be shared with others
+    string quizString = quizToString(quiz);
+    cout << endl;
+    cout << "Here is the quiz in a format that can be shared with others:" << endl;
+    cout << quizString << endl;
+
+    return 0;
+}
